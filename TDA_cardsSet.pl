@@ -19,10 +19,9 @@ cardsSet(Elements, NumE, MaxC, Seed, CS).
 % lista vacía.
 % [] -> [[1, 2, 3]]
 
-primeraCarta(NumE, _i) :-
-    _i <= NumE
-primeraCarta(numE, _i) :-
-    primeraCarta(numE, _iMas),
-    _i is _iMas + 1.
+primeraCarta(0,	FirstCard, FirstCard).
+primeraCarta(NumE, Resto, FirstCard) :-
+    NumE_i is NumE - 1,
+    primeraCarta(NumE_i, [NumE|Resto], FirstCard), !.
 
 % Consultas.
