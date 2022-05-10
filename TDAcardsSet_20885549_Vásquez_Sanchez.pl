@@ -8,7 +8,7 @@
 
 % Reglas.
 
-% Regla que
+% Regla que genera el mazo de cartas permitido para Dobble.
 % Dominio: Elements (list) X numE(int) X maxC(int) X seed (int) X CS (CardSet)
 % Recorrido: CS (CardSet)
 cardsSet(Elements, NumE, MaxC, Seed, CS).
@@ -22,7 +22,7 @@ cardsSet(Elements, NumE, MaxC, Seed, CS).
 % lista vacía.
 % [] -> [[1, 2, 3]]
 
-% Regla que
+% Regla que genera la primera carta del mazo cardsSet.
 % Dominio: NumE (int) X Resto (list) X FirstCard (list)
 % Recorrido: FirstCard (list)
 % firstCard es una lista con la primera carta
@@ -32,7 +32,7 @@ primeraCarta(NumE, Resto, FirstCard) :-
     NumE_i is NumE - 1,
     primeraCarta(NumE_i, [NumE|Resto], FirstCard), !.
 
-% Regla que
+% Regla que genera cada una de las primeras n cartas.
 % Dominio: _j (int) X _k (int) X NumE (int) X Resto (list) X CartaN (list)
 % Recorrido: CartaN (list)
 % Genera una de las n primeras cartas.
@@ -44,7 +44,7 @@ n_cartas(_j, _k, NumE, Resto, CartaN):-
     New_k is _k + 1,
     n_cartas(_j, New_k, NumE, [Num|Resto], CartaN), !.
 
-% Regla que
+% Regla que agrega las primeras n cartas a cardsSet.
 % Dominio: _j (int) X NumE (int) X Baraja (list) X B (list)
 % Recorrido: B (list)
 % Almacena las primeras n cartas en baraja.
@@ -55,10 +55,9 @@ n_cartas_in(_j, NumE, BarajaAct, B):-
     New_j is _j + 1,
     n_cartas_in(New_j, NumE, BarajaPst, B), !.
 
-% Regla que
+% Regla que Regla que genera cada una de las últimas n cuadrado cartas.
 % Dominio: _j (int) X _k (int) X _i (int) X NumE (int) X Resto (list) X CartaN (list)
 % Recorrido: CartaN (list)
-% Genera una de las n cuadrado primeras cartas.
 % n2_cartas(1, 1, 1, 3, [_i + 1], A).
 n2_cartas(_, NumE, _, NumE, CartaN, CartaN).
 n2_cartas(_j, _k, _i, NumE, Resto, CartaN):-
@@ -67,7 +66,7 @@ n2_cartas(_j, _k, _i, NumE, Resto, CartaN):-
     New_k is _k + 1,
     n2_cartas(_j, New_k, _i, NumE, [Num|Resto], CartaN), !.
 
-% Regla que
+% Regla que Regla que agrega las últimas n cuadrado cartas a cardsSet.
 % Dominio: _j (int) X _i (int) X NumE (int) X BarajaAct (list) X Baraja (list)
 % Recorrido: Baraja (list)
 % Almacena las primeras n cuadrado cartas en baraja.
