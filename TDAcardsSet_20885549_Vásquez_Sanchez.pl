@@ -26,7 +26,6 @@ cardsSet(Elements, NumE, MaxC, Seed, CS).
 % Dominio: NumE (int) X Resto (list) X FirstCard (list)
 % Recorrido: FirstCard (list)
 % firstCard es una lista con la primera carta
-% primeraCarta(5, [], A).
 primeraCarta(0,	FirstCard, FirstCard).
 primeraCarta(NumE, Resto, FirstCard) :-
     NumE_i is NumE - 1,
@@ -36,7 +35,6 @@ primeraCarta(NumE, Resto, FirstCard) :-
 % Dominio: _j (int) X _k (int) X NumE (int) X Resto (list) X CartaN (list)
 % Recorrido: CartaN (list)
 % Genera una de las n primeras cartas.
-% n_cartas(1, 1, 3, [1], A).
 n_cartas(_, NumE, NumE, CartaN, CartaN).
 n_cartas(_j, _k, NumE, Resto, CartaN):-
     N is NumE - 1,
@@ -58,7 +56,6 @@ n_cartas_in(_j, NumE, BarajaAct, B):-
 % Regla que Regla que genera cada una de las últimas n cuadrado cartas.
 % Dominio: _j (int) X _k (int) X _i (int) X NumE (int) X Resto (list) X CartaN (list)
 % Recorrido: CartaN (list)
-% n2_cartas(1, 1, 1, 3, [_i + 1], A).
 n2_cartas(_, NumE, _, NumE, CartaN, CartaN).
 n2_cartas(_j, _k, _i, NumE, Resto, CartaN):-
     N is NumE - 1,
@@ -66,11 +63,11 @@ n2_cartas(_j, _k, _i, NumE, Resto, CartaN):-
     New_k is _k + 1,
     n2_cartas(_j, New_k, _i, NumE, [Num|Resto], CartaN), !.
 
+% CLÁUSULA SIN FUNCIONAMIENTO.
 % Regla que Regla que agrega las últimas n cuadrado cartas a cardsSet.
 % Dominio: _j (int) X _i (int) X NumE (int) X BarajaAct (list) X Baraja (list)
 % Recorrido: Baraja (list)
 % Almacena las primeras n cuadrado cartas en baraja.
-% n2_cartas_in(1, 1, 3, [], B).
 n2_cartas_in(NumE, NumE, NumE, Baraja, Baraja).
 n2_cartas_in(NumE, _, NumE, Baraja, Baraja).
 n2_cartas_in(_j, _i, NumE, BarajaAct, B):-
@@ -84,6 +81,25 @@ n2_cartas_in(_j, _i, NumE, BarajaAct, B):-
 
 
 % Consultas (Ejemplos de uso de predicados).
-% cardsSet([1, 2, 3, 4, 5, 6, 7], 3, 5, 92175, CS).
-% cardsSet(["arbol", "lapiz", "manzana", "carton", "caja", "zapato", "mochila"], 4, 7, 92175, CS).
-% cardsSet(["a", "b", "c", "d", "e", "f", "g"], 2, 1, 92175, CS).
+
+% cardsSet([1, 2, 3, 4, 5, 6, 7], 3, 5, 92175, CS). No funcional.
+% cardsSet(["arbol", "lapiz", "manzana", "carton", "caja", "zapato", "mochila"], 4, 7, 92175, CS). No funcional.
+% cardsSet(["a", "b", "c", "d", "e", "f", "g"], 2, 1, 92175, CS). No funcional.
+
+% Ejemplos funcionales:
+
+% primeraCarta(5, [], A).
+% primeraCarta(4, [], A).
+% primeraCarta(6, [], A).
+
+% n_cartas(1, 1, 3, [1], B).
+% n_cartas(1, 1, 4, [1], B).
+% n_cartas(2, 1, 3, [1], B).
+
+% n2_cartas(1, 1, 1, 3, 2, A).
+% n2_cartas(2, 1, 1, 3, 2, A).
+% n2_cartas(1, 1, 3, 3, 2, A).
+
+% n_cartas_in(1, 4, [], C).
+% n_cartas_in(1, 3, [], C).
+% n_cartas_in(1, 5, [], C).
