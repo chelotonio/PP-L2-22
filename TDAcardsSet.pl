@@ -101,9 +101,9 @@ n2_cartas(Elements, _i, _j, _k, _n, Lista, Salida):-
     New_k is _k + 1, 
     n2_cartas(Elements, _i, _j, New_k, _n, Lista2, Salida), !.
 
-% Función que
-% Dominio:
-% Recorrido:
+% Regla que genera un conjunto de cartas válido 
+% Dominio: Elements () X NumE (int) X MaxC (int) X Seed (int) X CS (lista)
+% Recorrido: cardsSet (list)
 cardsSet(Elements, NumE, MaxC, Seed, CS):-
   primeraCarta(Elements, NumE, [], A),
   insertar_en_baraja(A, [], B),
@@ -153,18 +153,57 @@ cardsSetNthCard(CardsSet, N, Card):-
     NewN is N - 1,
     buscarElemento(CardsSet, NewN, Card), !.
 
-% _____________ TDA CardsSet - nthCard _____________
+% _____________ TDA CardsSet - findTotalCards _____________
 
 % Regla que a partir de una carta de muestra, determina la cantidad total de cartas que se deben producir para construir un conjunto válido.
-% Dominio:
-% Recorrido: 
+% Dominio: card (lista) X int
+% Recorrido: int
 cardsSetFindTotalCards(Card, Total):-
     contarLista(Card, 0, A), 
     Total is ((A - 1) * (A - 1)) + (A - 1) + 1.
 
 % _____________ TDA CardsSet - missingCards _____________
 
+% Regla que a partir de un conjunto de cartas retorna el conjunto de cartas que hacen falta para que el set sea válido.
+% Dominio: cardsSet (lista) X cardsSet (lista)
+% Recorrido: cardsSet (lista)
+% cardsSetMissingCards(CardsSet, CS).
+cardsSetMissingCards([Cabeza|Resto], CSs):-
+    contarLista(Cabeza, 0, NumE),
+    cardsSet([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], NumE, -1, 912321, CS),
+    cardsSetNthCard(CS, 3, Card3),
+    cardsSetFindTotalCards(Card3, Total),
+    contarLista([Cabeza|Resto], 0, CantCartas),
+    csmcAux(CS, CantCartas, Total, [], CSs).
 
+% Regla que filtra las cartas que no se encuentran del cardsSet completo y las añade a una nueva lista.
+csmcAux(_, _n, _n, CSo, CSo).
+csmcAux(CSt, _i, _n, Lista, Salida):-
+    buscarElemento(CSt, _i, Carta),
+    New_i is _i + 1,
+    csmcAux(CSt, New_i, _n, [Carta|Lista], Salida), !.
+    
+% _____________ TDA CardsSet - toString _____________
+
+% Regla que convierte un conjunto de cartas a una representación basada en strings que posteriormente pueda visualizarse a través de la función write.
+% Dominio: cardsSet (lista) X string
+% Recorrido: string
+cardsSetToString(CS, String):-
+    csTs(CS, [], Lista),
+    atomics_to_string(Lista, "", String).
+csTs([], Lista, Lista).
+csTs([Carta|Resto], Lista, Salida):-
+    atomics_to_string(Carta, "", StrCarta),
+    insertar_en_baraja(StrCarta, Lista, Nlista),
+    insertar_en_baraja(",Carta con elementos:", Nlista, NNlista),
+    csTs(Resto, NNlista, Salida), !.
+
+% _____________ TDA game - Constructor  _____________
+
+% Regla que construye un juego de Dobble.
+% Dominio: numPlayers (int) X cardsSet X mode (string) X seed (int) X game (TDAgame)
+% Recorrido: game (TDAgame)
+dobbleGame(NumPlayers, CardsSet, Mode, Seed, [NumPlayers, CardsSet, Mode, Seed]).
 
 % _____________ Consultas _____________
 
@@ -198,5 +237,17 @@ cardsSetFindTotalCards(Card, Total):-
 % cardsSet([1, 2, 3, 4, 5, 6, 7], 2, 2, 912321, CS), cardsSetNthCard(CS, 2, Card2), cardsSetFindTotalCards(Card3, Total).
 
 % Consultas de ejemplo para missingCards:
+% cardsSet([1, 2, 3, 4, 5, 6, 7], 3, 4, 912321, CS), cardsSetMissingCards(CS, CS2).
+% cardsSet([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 4, 5, 912321, CS), cardsSetMissingCards(CS, CS2).
+% cardsSet([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 2, 2, 912321, CS), cardsSetMissingCards(CS, CS2).
 
+% Consultas de ejemplo para toString:
+% cardsSet(["Arból", "Manzana", "Plátano", "Zorro", "Lana", "Cama", "Silla"], 3, 3,84392, CS), cardsSetToString(CS, CS_STR), write(CS_STR).
+% cardsSet([1, 2, 3, 4, 5, 6, 7], 2, 3, 912321, CS), cardsSetToString(CS, CS_STR), write(CS_STR).
+% cardsSet(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"], 4, 10, 912321, CS), cardsSetToString(CS, CS_STR), write(CS_STR).
+
+% Consultas de ejemplo para dobbleGame:
+% cardsSet([1, 2, 3, 4, 5, 6, 7], 2, 3, 912321, CS), dobbleGame(2, CS, "Player vs Player", 34235, G1).
+% cardsSet(["Arból", "Manzana", "Plátano", "Zorro", "Lana", "Cama", "Silla"], 3, 5,84392, CS), dobbleGame(2, CS, "1v1v1", 34235, G2).
+% cardsSet(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"], 4, 4, 912321, CS), dobbleGame(2, CS, "Player vs IA", 34235, G3).
 
